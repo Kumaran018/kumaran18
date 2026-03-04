@@ -39,7 +39,7 @@ const getContentById = async (req, res) => {
 // @route   POST /api/content
 // @access  Private/Admin
 const createContent = async (req, res) => {
-    const { title, subject, type, difficulty, tags, contentUrl, description } = req.body;
+    const { title, subject, type, difficulty, tags, contentUrl, description, coverImage } = req.body;
 
     const content = new Content({
         title,
@@ -48,6 +48,7 @@ const createContent = async (req, res) => {
         difficulty,
         tags,
         contentUrl,
+        coverImage: coverImage || '',
         description,
         createdBy: req.user._id
     });
@@ -69,6 +70,7 @@ const updateContent = async (req, res) => {
         content.difficulty = req.body.difficulty || content.difficulty;
         content.tags = req.body.tags || content.tags;
         content.contentUrl = req.body.contentUrl || content.contentUrl;
+        content.coverImage = req.body.coverImage !== undefined ? req.body.coverImage : content.coverImage;
         content.description = req.body.description || content.description;
 
         const updatedContent = await content.save();

@@ -26,6 +26,10 @@ const contentSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    coverImage: {
+        type: String,
+        default: ''
+    },
     description: {
         type: String
     },
