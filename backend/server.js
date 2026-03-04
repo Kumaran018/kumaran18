@@ -7,7 +7,15 @@ const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
-connectDB();
+
+// Only connect to DB once, not on every request
+let isConnected = false;
+const ensureDbConnection = async () => {
+    if (!isConnected) {
+        await connectDB();
+        isConnected = true;
+    }
+};
 
 const app = express();
 
@@ -29,6 +37,17 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+// Middleware to ensure DB connection for all routes
+app.use(async (req, res, next) => {
+    try {
+        await ensureDbConnection();
+        next();
+    } catch (error) {
+        console.error('Database connection error:', error);
+        res.status(500).json({ message: 'Database connection failed', error: error.message });
+    }
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
@@ -41,8 +60,13 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 
 // Root route
-app.get('/', (req, res) => {
-    res.send('API is running...');
+app.get('/', async (req, res) => {
+    try {
+        await ensureDbConnection();
+        res.json({ message: 'API is running...', status: 'ok' });
+    } catch (error) {
+        res.status(500).json({ message: 'Database connection failed', error: error.message });
+    }
 });
 
 // Error Handling
