@@ -76,52 +76,55 @@ const aiResourceAgent = async (req, res) => {
     try {
         console.log(`AI Agent searching for: ${topic} in domain: ${domain}`);
         
-        let axios;
-        try {
-            axios = require('axios');
-        } catch (err) {
-            console.error('Axios not installed. Please run: npm install axios');
-            return res.status(500).json({
-                agentMessage: 'Server configuration error. Please contact administrator.',
-                suggestions: [],
-                error: 'Axios module not found. Run: npm install axios in backend directory'
-            });
-        }
-
+        const https = require('https');
         const suggestedResources = [];
+
+        // Function to make HTTPS requests without axios
+        const fetchData = (url) => {
+            return new Promise((resolve, reject) => {
+                https.get(url, {
+                    headers: {
+                        'User-Agent': 'Learning-Platform-Agent',
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                }, (response) => {
+                    let data = '';
+                    response.on('data', chunk => data += chunk);
+                    response.on('end', () => {
+                        try {
+                            resolve(JSON.parse(data));
+                        } catch (e) {
+                            resolve(null);
+                        }
+                    });
+                }).on('error', reject);
+            });
+        };
 
         // 1. Search GitHub for repositories
         try {
-            const githubResponse = await axios.get('https://api.github.com/search/repositories', {
-                params: {
-                    q: `${topic} ${domain} tutorial OR awesome`,
-                    sort: 'stars',
-                    order: 'desc',
-                    per_page: 5
-                },
-                headers: {
-                    'Accept': 'application/vnd.github.v3+json',
-                    'User-Agent': 'Learning-Platform-Agent'
-                }
-            });
+            const githubUrl = `https://api.github.com/search/repositories?q=${encodeURIComponent(topic + ' ' + domain + ' tutorial OR awesome')}&sort=stars&order=desc&per_page=5`;
+            const githubData = await fetchData(githubUrl);
 
-            githubResponse.data.items.slice(0, 3).forEach(repo => {
-                const difficulty = repo.stargazers_count > 10000 ? 'Beginner' : 
-                                 repo.stargazers_count > 1000 ? 'Intermediate' : 'Advanced';
-                
-                suggestedResources.push({
-                    title: repo.full_name,
-                    type: 'coding',
-                    difficulty: difficulty,
-                    url: repo.html_url,
-                    tags: [domain.toLowerCase(), topic.toLowerCase(), 'github', 'open-source'],
-                    description: repo.description || `Popular GitHub repository for ${topic} with ${repo.stargazers_count} stars`,
-                    metadata: {
-                        stars: repo.stargazers_count,
-                        language: repo.language
-                    }
+            if (githubData && githubData.items) {
+                githubData.items.slice(0, 3).forEach(repo => {
+                    const difficulty = repo.stargazers_count > 10000 ? 'Beginner' : 
+                                     repo.stargazers_count > 1000 ? 'Intermediate' : 'Advanced';
+                    
+                    suggestedResources.push({
+                        title: repo.full_name,
+                        type: 'coding',
+                        difficulty: difficulty,
+                        url: repo.html_url,
+                        tags: [domain.toLowerCase(), topic.toLowerCase(), 'github', 'open-source'],
+                        description: repo.description || `Popular GitHub repository for ${topic} with ${repo.stargazers_count} stars`,
+                        metadata: {
+                            stars: repo.stargazers_count,
+                            language: repo.language
+                        }
+                    });
                 });
-            });
+            }
         } catch (err) {
             console.error('GitHub API error:', err.message);
         }
