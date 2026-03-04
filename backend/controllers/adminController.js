@@ -75,7 +75,19 @@ const aiResourceAgent = async (req, res) => {
 
     try {
         console.log(`AI Agent searching for: ${topic} in domain: ${domain}`);
-        const axios = require('axios');
+        
+        let axios;
+        try {
+            axios = require('axios');
+        } catch (err) {
+            console.error('Axios not installed. Please run: npm install axios');
+            return res.status(500).json({
+                agentMessage: 'Server configuration error. Please contact administrator.',
+                suggestions: [],
+                error: 'Axios module not found. Run: npm install axios in backend directory'
+            });
+        }
+
         const suggestedResources = [];
 
         // 1. Search GitHub for repositories
