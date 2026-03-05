@@ -19,8 +19,8 @@ app.use(helmet());
 
 // CORS configuration for production
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' 
-        ? [process.env.FRONTEND_URL, 'https://kumaran18.vercel.app'] 
+    origin: process.env.NODE_ENV === 'production'
+        ? [process.env.FRONTEND_URL, 'https://kumaran18.onrender.com', 'https://kumaran18.vercel.app'].filter(Boolean)
         : ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
     optionsSuccessStatus: 200
