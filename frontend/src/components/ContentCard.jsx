@@ -34,7 +34,11 @@ const ContentCard = ({ content, onToggleBookmark, isBookmarked }) => {
     return (
         <div className="content-card glass">
             <Link to={`/content/${content._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className="card-image-placeholder">
+                <div className="card-image-placeholder" style={{
+                    backgroundImage: content.coverImage ? `url(${content.coverImage})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                }}>
                     <div className="type-badge">
                         {getTypeIcon(content.type)}
                         <span>{content.type}</span>

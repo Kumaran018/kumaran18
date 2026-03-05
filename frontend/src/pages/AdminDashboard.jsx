@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({
         title: '', subject: 'Computer Science', type: 'video',
-        difficulty: 'Beginner', tags: '', contentUrl: '', description: ''
+        difficulty: 'Beginner', tags: '', contentUrl: '', coverImage: '', description: ''
     });
 
     const fetchData = async () => {
@@ -89,7 +89,7 @@ const AdminDashboard = () => {
             const { data } = await API.post('/content', { ...formData, tags: tagsArray });
             setContent([data, ...content]);
             setIsAdding(false);
-            setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', description: '' });
+            setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', coverImage: '', description: '' });
             fetchData(); // Refresh stats
         } catch (err) {
             console.error('Error adding content:', err);
@@ -104,7 +104,7 @@ const AdminDashboard = () => {
             setContent(content.map(c => c._id === editingId ? data : c));
             setIsEditing(false);
             setEditingId(null);
-            setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', description: '' });
+            setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', coverImage: '', description: '' });
         } catch (err) {
             console.error('Error updating content:', err);
         }
@@ -118,6 +118,7 @@ const AdminDashboard = () => {
             difficulty: item.difficulty,
             tags: item.tags.join(', '),
             contentUrl: item.contentUrl,
+            coverImage: item.coverImage || '',
             description: item.description || ''
         });
         setEditingId(item._id);
@@ -127,7 +128,7 @@ const AdminDashboard = () => {
     const closeEditModal = () => {
         setIsEditing(false);
         setEditingId(null);
-        setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', description: '' });
+        setFormData({ title: '', subject: 'Computer Science', type: 'video', difficulty: 'Beginner', tags: '', contentUrl: '', coverImage: '', description: '' });
     };
 
     const handleDelete = async (id) => {
@@ -312,6 +313,15 @@ const AdminDashboard = () => {
                                 <input required placeholder="https://..." value={formData.contentUrl} onChange={e => setFormData({ ...formData, contentUrl: e.target.value })} />
                             </div>
                             <div className="form-group">
+                                <label>Cover Image URL (optional)</label>
+                                <input placeholder="https://example.com/image.jpg" value={formData.coverImage} onChange={e => setFormData({ ...formData, coverImage: e.target.value })} />
+                                {formData.coverImage && (
+                                    <div style={{ marginTop: '0.5rem' }}>
+                                        <img src={formData.coverImage} alt="Preview" style={{ maxWidth: '200px', maxHeight: '120px', borderRadius: '8px', objectFit: 'cover' }} onError={(e) => e.target.style.display = 'none'} />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="form-group">
                                 <label>Tags (comma separated)</label>
                                 <input placeholder="react, hooks, frontend" value={formData.tags} onChange={e => setFormData({ ...formData, tags: e.target.value })} />
                             </div>
@@ -442,6 +452,15 @@ const AdminDashboard = () => {
                             <div className="form-group">
                                 <label>Content URL</label>
                                 <input required placeholder="https://..." value={formData.contentUrl} onChange={e => setFormData({ ...formData, contentUrl: e.target.value })} />
+                            </div>
+                            <div className="form-group">
+                                <label>Cover Image URL (optional)</label>
+                                <input placeholder="https://example.com/image.jpg" value={formData.coverImage} onChange={e => setFormData({ ...formData, coverImage: e.target.value })} />
+                                {formData.coverImage && (
+                                    <div style={{ marginTop: '0.5rem' }}>
+                                        <img src={formData.coverImage} alt="Preview" style={{ maxWidth: '200px', maxHeight: '120px', borderRadius: '8px', objectFit: 'cover' }} onError={(e) => e.target.style.display = 'none'} />
+                                    </div>
+                                )}
                             </div>
                             <div className="form-group">
                                 <label>Tags (comma separated)</label>
