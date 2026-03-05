@@ -246,7 +246,7 @@ const AdminDashboard = () => {
                                         <td>
                                             <select
                                                 value={u.role}
-                                                className="glass text-xs p-1"
+                                                className="form-control text-xs p-1"
                                                 onChange={(e) => handleUpdateRole(u._id, e.target.value)}
                                             >
                                                 <option value="student">Student</option>
@@ -327,7 +327,7 @@ const AdminDashboard = () => {
                             </div>
                             <div className="form-group">
                                 <label>Description</label>
-                                <textarea rows="3" className="glass w-full p-3 text-white" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                                <textarea rows="3" className="form-control w-full p-3" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                             </div>
                             <button type="submit" className="btn-primary">Publish to Platform</button>
                         </form>
@@ -410,9 +410,9 @@ const AdminDashboard = () => {
                         >
                             <X size={24} />
                         </button>
-                        
+
                         <h2 className="text-2xl font-bold mb-6">Edit Content</h2>
-                        
+
                         <form onSubmit={handleEditContent}>
                             <div className="form-grid">
                                 <div className="form-group">
@@ -468,7 +468,7 @@ const AdminDashboard = () => {
                             </div>
                             <div className="form-group">
                                 <label>Description</label>
-                                <textarea rows="3" className="glass w-full p-3 text-white" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                                <textarea rows="3" className="form-control w-full p-3" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <button type="submit" className="btn-primary" style={{ flex: 1 }}>Update Content</button>
@@ -529,25 +529,25 @@ const AdminDashboard = () => {
                                     <div key={idx} className="glass p-5 border-l-4 border-indigo-500">
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-sm">{s.title}</h4>
-                                            <span className="text-xs glass px-2 py-1 rounded capitalize">{s.type}</span>
+                                            <span className="badge-neutral capitalize">{s.type}</span>
                                         </div>
                                         <p className="text-xs text-muted mb-3">{s.description}</p>
                                         {s.metadata && (
                                             <div className="flex gap-2 mb-3 text-xs">
                                                 {s.metadata.stars && (
-                                                    <span className="glass px-2 py-1 rounded">⭐ {s.metadata.stars.toLocaleString()}</span>
+                                                    <span className="badge-neutral">⭐ {s.metadata.stars.toLocaleString()}</span>
                                                 )}
                                                 {s.metadata.language && (
-                                                    <span className="glass px-2 py-1 rounded">{s.metadata.language}</span>
+                                                    <span className="badge-neutral">{s.metadata.language}</span>
                                                 )}
                                             </div>
                                         )}
                                         <div className="flex justify-between items-center gap-2">
                                             <span className={`difficulty-badge diff-${s.difficulty.toLowerCase()}`}>{s.difficulty}</span>
                                             <div className="flex gap-2">
-                                                <a 
-                                                    href={s.url} 
-                                                    target="_blank" 
+                                                <a
+                                                    href={s.url}
+                                                    target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="icon-btn text-xs flex items-center gap-1"
                                                     style={{ textDecoration: 'none' }}

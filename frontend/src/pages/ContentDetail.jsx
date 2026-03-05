@@ -129,8 +129,8 @@ const ContentDetail = () => {
                             <h4 className="text-sm font-semibold mb-3">Tags</h4>
                             <div className="flex flex-wrap gap-2">
                                 {content.tags.map(tag => (
-                                    <span key={tag} className="glass px-3 py-1 text-xs rounded-full">
-                                        #{tag}
+                                    <span key={tag} className="badge-neutral rounded-full px-3 py-1">
+                                        {tag}
                                     </span>
                                 ))}
                             </div>

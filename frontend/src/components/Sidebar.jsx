@@ -26,7 +26,7 @@ const Sidebar = () => {
     }
 
     return (
-        <aside className="sidebar glass">
+        <aside className="sidebar">
             <div className="sidebar-logo">
                 <div className="logo-icon">A</div>
                 <span>AcademiaAI</span>

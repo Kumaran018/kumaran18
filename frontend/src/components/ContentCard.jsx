@@ -32,7 +32,7 @@ const ContentCard = ({ content, onToggleBookmark, isBookmarked }) => {
     };
 
     return (
-        <div className="content-card glass">
+        <div className="content-card">
             <Link to={`/content/${content._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="card-image-placeholder" style={{
                     backgroundImage: content.coverImage ? `url(${content.coverImage})` : 'none',
